@@ -1,7 +1,5 @@
-# hacktiv8_fp_2
+# Sinta Backend
 
-### Final Project 2 Hacktiv8 Kelompok 2
-- Tasya Gracinia
-- Muhammad Khoirul Anam
-- Alexander
+### MPPL - D
+Repository ini berisi kode sumber untuk backend Sinta's Store
 
