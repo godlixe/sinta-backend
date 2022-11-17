@@ -21,16 +21,16 @@ func main() {
 	}
 	var (
 		db             *gorm.DB                  = config.SetupDatabaseConnection()
-		userRepository repository.UserRepository = repository.NewUserRepository(db)
+		tokoRepository repository.TokoRepository = repository.NewTokoRepository(db)
 		// productRepository repository.ProductRepository = repository.NewProductRepository(db)
 
 		jwtService  service.JWTService  = service.NewJWTService()
-		userService service.UserService = service.NewUserService(userRepository)
-		authService service.AuthService = service.NewAuthService(userRepository)
+		tokoService service.TokoService = service.NewTokoService(tokoRepository)
+		authService service.AuthService = service.NewAuthService(tokoRepository)
 		// productService service.ProductService = service.NewProductService(productRepository)
 
 		// productController controller.ProductController = controller.NewProductController(productService, jwtService)
-		authController controller.AuthController = controller.NewAuthController(userService, authService, jwtService)
+		authController controller.AuthController = controller.NewAuthController(tokoService, authService, jwtService)
 	)
 
 	defer config.CloseDatabaseConnection(db)

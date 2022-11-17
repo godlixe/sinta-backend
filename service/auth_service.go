@@ -7,22 +7,22 @@ import (
 )
 
 type AuthService interface {
-	VerifyCredential(ctx context.Context, email string, password string) (bool, error)
-	CheckEmailDuplicate(ctx context.Context, email string) (bool, error)
+	VerifyCredential(ctx context.Context, username string, password string) (bool, error)
+	CheckUsernameDuplicate(ctx context.Context, username string) (bool, error)
 }
 
 type authService struct {
-	userRepository repository.UserRepository
+	tokoRepository repository.TokoRepository
 }
 
-func NewAuthService(ur repository.UserRepository) AuthService {
+func NewAuthService(tr repository.TokoRepository) AuthService {
 	return &authService{
-		userRepository: ur,
+		tokoRepository: tr,
 	}
 }
 
-func (s *authService) VerifyCredential(ctx context.Context, email string, password string) (bool, error) {
-	res, err := s.userRepository.GetUserByEmail(ctx, email)
+func (s *authService) VerifyCredential(ctx context.Context, username string, password string) (bool, error) {
+	res, err := s.tokoRepository.GetTokoByUsername(ctx, username)
 	if err != nil {
 		return false, err
 	}
@@ -31,20 +31,20 @@ func (s *authService) VerifyCredential(ctx context.Context, email string, passwo
 		return false, err
 	}
 
-	if res.Email == email && comparedPassword {
+	if res.Username == username && comparedPassword {
 		return true, nil
 	}
 
 	return false, nil
 }
 
-func (s *authService) CheckEmailDuplicate(ctx context.Context, email string) (bool, error) {
-	res, err := s.userRepository.GetUserByEmail(ctx, email)
+func (s *authService) CheckUsernameDuplicate(ctx context.Context, username string) (bool, error) {
+	res, err := s.tokoRepository.GetTokoByUsername(ctx, username)
 	if err != nil {
 		return false, err
 	}
 
-	if res.Email == "" {
+	if res.Username == "" {
 		return false, nil
 	}
 	return true, nil

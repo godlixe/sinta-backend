@@ -16,70 +16,71 @@ type AuthController interface {
 }
 
 type authController struct {
-	userService service.UserService
+	tokoService service.TokoService
 	authService service.AuthService
 	jwtService  service.JWTService
 }
 
-func NewAuthController(us service.UserService, as service.AuthService, js service.JWTService) AuthController {
+func NewAuthController(ts service.TokoService, as service.AuthService, js service.JWTService) AuthController {
 	return &authController{
-		userService: us,
+		tokoService: ts,
 		authService: as,
 		jwtService:  js,
 	}
 }
 
 func (c *authController) Register(ctx *gin.Context) {
-	var registerDTO dto.UserRegisterDTO
-	errDTO := ctx.ShouldBind(&registerDTO)
+	var tokoDTO dto.TokoCreateDTO
+	errDTO := ctx.ShouldBind(&tokoDTO)
 	if errDTO != nil {
 		response := common.BuildErrorResponse("Failed to process request", errDTO.Error(), common.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
 		return
 	}
 
-	isDuplicateEmail, _ := c.authService.CheckEmailDuplicate(ctx.Request.Context(), registerDTO.Email)
-	if isDuplicateEmail {
+	isDuplicateUsername, _ := c.authService.CheckUsernameDuplicate(ctx.Request.Context(), tokoDTO.Username)
+	if isDuplicateUsername {
 		response := common.BuildErrorResponse("Failed to process request", "Duplicate Email", common.EmptyObj{})
 		ctx.JSON(http.StatusConflict, response)
 		return
 	}
 
-	createdUser, err := c.userService.CreateUser(ctx.Request.Context(), registerDTO)
+	createdToko, err := c.tokoService.CreateToko(ctx.Request.Context(), tokoDTO)
 	if err != nil {
 		response := common.BuildErrorResponse("Failed to process request", err.Error(), common.EmptyObj{})
 		ctx.JSON(http.StatusConflict, response)
 		return
 	}
-	userId := strconv.FormatUint(uint64(createdUser.ID), 10)
-	token := c.jwtService.GenerateToken(userId)
+	tokoID := strconv.FormatUint(uint64(createdToko.ID), 10)
+	token := c.jwtService.GenerateToken(tokoID)
+
 	response := common.BuildResponse(true, "OK", token)
 	ctx.JSON(http.StatusCreated, response)
 }
 
 func (c *authController) Login(ctx *gin.Context) {
-	var loginDTO dto.UserLoginDTO
-	if errDTO := ctx.ShouldBind(&loginDTO); errDTO != nil {
+	var tokoLoginDTO dto.TokoLoginDTO
+	if errDTO := ctx.ShouldBind(&tokoLoginDTO); errDTO != nil {
 		response := common.BuildErrorResponse("Failed to process request", errDTO.Error(), common.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
 		return
 	}
 
-	authResult, _ := c.authService.VerifyCredential(ctx.Request.Context(), loginDTO.Email, loginDTO.Password)
+	authResult, _ := c.authService.VerifyCredential(ctx.Request.Context(), tokoLoginDTO.Username, tokoLoginDTO.Password)
 	if !authResult {
 		response := common.BuildErrorResponse("Error Logging in", "Invalid Credentials", nil)
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, response)
 		return
 	}
 
-	user, err := c.userService.GetUserByEmail(ctx.Request.Context(), loginDTO.Email)
+	toko, err := c.tokoService.GetTokoByUsername(ctx.Request.Context(), tokoLoginDTO.Username)
 	if err != nil {
 		response := common.BuildErrorResponse("Failed to process request", err.Error(), common.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
 		return
 	}
-	userId := strconv.FormatUint(uint64(user.ID), 10)
-	generatedToken := c.jwtService.GenerateToken(userId)
+	tokoID := strconv.FormatUint(uint64(toko.ID), 10)
+	generatedToken := c.jwtService.GenerateToken(tokoID)
 	response := common.BuildResponse(true, "OK", generatedToken)
 	ctx.JSON(http.StatusOK, response)
 }

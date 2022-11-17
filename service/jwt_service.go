@@ -10,13 +10,13 @@ import (
 )
 
 type JWTService interface {
-	GenerateToken(userID string) string
+	GenerateToken(tokoID string) string
 	ValidateToken(token string) (*jwt.Token, error)
-	GetUserIDByToken(token string) (uint, error)
+	GetTokoIDByToken(token string) (uint, error)
 }
 
 type jwtCustomClaim struct {
-	UserID string `json:"user_id"`
+	TokoID string `json:"toko_id"`
 	jwt.RegisteredClaims
 }
 
@@ -35,16 +35,16 @@ func NewJWTService() JWTService {
 func getSecretKey() string {
 	secretKey := os.Getenv("JWT_SECRET")
 	if secretKey == "" {
-		secretKey = "hacktiv8"
+		secretKey = "sinta_b4ck3nd"
 	}
 	return secretKey
 }
 
-func (j *jwtService) GenerateToken(UserID string) string {
+func (j *jwtService) GenerateToken(tokoID string) string {
 	claims := &jwtCustomClaim{
-		UserID,
+		tokoID,
 		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 15)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 120)),
 			Issuer:    j.issuer,
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
@@ -66,13 +66,13 @@ func (j *jwtService) ValidateToken(token string) (*jwt.Token, error) {
 	})
 }
 
-func (j *jwtService) GetUserIDByToken(token string) (uint, error) {
+func (j *jwtService) GetTokoIDByToken(token string) (uint, error) {
 	t_Token, err := j.ValidateToken(token)
 	if err != nil {
 		return 0, err
 	}
 	claims := t_Token.Claims.(jwt.MapClaims)
-	id := fmt.Sprintf("%v", claims["user_id"])
+	id := fmt.Sprintf("%v", claims["toko_id"])
 	idUint, _ := strconv.ParseUint(id, 10, 64)
 	return uint(idUint), nil
 }
