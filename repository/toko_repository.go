@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"sinta-backend/entity"
 
 	"gorm.io/gorm"
@@ -10,6 +11,7 @@ import (
 type TokoRepository interface {
 	CreateToko(ctx context.Context, toko entity.Toko) (entity.Toko, error)
 	GetTokoByUsername(ctx context.Context, username string) (entity.Toko, error)
+	GetAllToko(ctx context.Context) ([]entity.Toko, error)
 	UpdateToko(ctx context.Context, toko entity.Toko) (entity.Toko, error)
 	DeleteToko(ctx context.Context, tokoID uint64) error
 }
@@ -31,6 +33,21 @@ func (db *tokoConnection) CreateToko(ctx context.Context, toko entity.Toko) (ent
 	}
 
 	return toko, nil
+}
+
+func (db *tokoConnection) GetAllToko(ctx context.Context) ([]entity.Toko, error) {
+	var daftarToko []entity.Toko
+
+	tx := db.connection.Find(&daftarToko)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	if len(daftarToko) <= 0 {
+		return nil, errors.New("no toko found")
+	}
+
+	return daftarToko, nil
 }
 
 func (db *tokoConnection) GetTokoByUsername(ctx context.Context, username string) (entity.Toko, error) {

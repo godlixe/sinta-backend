@@ -49,7 +49,7 @@ func (c *produkController) CreateProduk(ctx *gin.Context) {
 func (c *produkController) GetAllProduk(ctx *gin.Context) {
 	result, err := c.produkService.GetAllProduk(ctx.Request.Context())
 	if err != nil {
-		res := common.BuildErrorResponse("Failed to insert produk", err.Error(), common.EmptyObj{})
+		res := common.BuildErrorResponse("Failed to get produk", err.Error(), common.EmptyObj{})
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
