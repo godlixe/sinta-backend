@@ -9,7 +9,7 @@ import (
 )
 
 func AjuanRoutes(router *gin.Engine, ajuanController controller.AjuanController, jwtService service.JWTService) {
-	ajuanRoutes := router.Group("/produk", middleware.Authenticate(jwtService))
+	ajuanRoutes := router.Group("/ajuan", middleware.Authenticate(jwtService))
 	{
 		ajuanRoutes.GET("", ajuanController.GetAllAjuan)
 		ajuanRoutes.GET("/:id", ajuanController.GetAjuanByID)
