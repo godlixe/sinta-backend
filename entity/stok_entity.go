@@ -9,3 +9,7 @@ type Stok struct {
 	Jumlah   uint64
 	BaseModel
 }
+
+type StokBatch struct {
+	DaftarStok []Stok `json:"daftar_stok"`
+}

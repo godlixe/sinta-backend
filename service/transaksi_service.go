@@ -16,11 +16,13 @@ type TransaksiService interface {
 
 type transaksiService struct {
 	transaksiRepository repository.TransaksiRepository
+	stokRepository      repository.StokRepository
 }
 
-func NewTransaksiService(tr repository.TransaksiRepository) TransaksiService {
+func NewTransaksiService(tr repository.TransaksiRepository, sr repository.StokRepository) TransaksiService {
 	return &transaksiService{
 		transaksiRepository: tr,
+		stokRepository:      sr,
 	}
 }
 
@@ -32,9 +34,17 @@ func (s *transaksiService) CreateTransaksi(ctx context.Context, transaksiDTO dto
 		return transaksi, err
 	}
 
-	for idx, _ := range transaksi.DetailTransaksi {
+	for idx := range transaksi.DetailTransaksi {
 		transaksi.DetailTransaksi[idx].TokoID = tokoID
 	}
+
+	for idx := range transaksi.DetailTransaksi {
+		err := s.stokRepository.DecreaseStok(ctx, tokoID, transaksi.DetailTransaksi[idx].ProdukID, transaksi.DetailTransaksi[idx].Jumlah)
+		if err != nil {
+			return entity.Transaksi{}, err
+		}
+	}
+
 	return s.transaksiRepository.CreateTransaksi(ctx, transaksi)
 }
 
