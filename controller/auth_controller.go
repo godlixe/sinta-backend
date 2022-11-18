@@ -40,7 +40,7 @@ func (c *authController) Register(ctx *gin.Context) {
 
 	isDuplicateUsername, _ := c.authService.CheckUsernameDuplicate(ctx.Request.Context(), tokoDTO.Username)
 	if isDuplicateUsername {
-		response := common.BuildErrorResponse("Failed to process request", "Duplicate Email", common.EmptyObj{})
+		response := common.BuildErrorResponse("Failed to process request", "Duplicate Username", common.EmptyObj{})
 		ctx.JSON(http.StatusConflict, response)
 		return
 	}

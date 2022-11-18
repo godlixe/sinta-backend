@@ -20,17 +20,23 @@ func main() {
 		log.Println(err)
 	}
 	var (
-		db             *gorm.DB                  = config.SetupDatabaseConnection()
-		tokoRepository repository.TokoRepository = repository.NewTokoRepository(db)
-		// productRepository repository.ProductRepository = repository.NewProductRepository(db)
+		db                  *gorm.DB                       = config.SetupDatabaseConnection()
+		tokoRepository      repository.TokoRepository      = repository.NewTokoRepository(db)
+		produkRepository    repository.ProdukRepository    = repository.NewProdukRepository(db)
+		transaksiRepository repository.TransaksiRepository = repository.NewTransaksiRepository(db)
 
-		jwtService  service.JWTService  = service.NewJWTService()
-		tokoService service.TokoService = service.NewTokoService(tokoRepository)
-		authService service.AuthService = service.NewAuthService(tokoRepository)
+		jwtService       service.JWTService       = service.NewJWTService()
+		tokoService      service.TokoService      = service.NewTokoService(tokoRepository)
+		authService      service.AuthService      = service.NewAuthService(tokoRepository)
+		produkService    service.ProdukService    = service.NewProdukService(produkRepository)
+		transaksiService service.TransaksiService = service.NewTransaksiService(transaksiRepository)
 		// productService service.ProductService = service.NewProductService(productRepository)
 
 		// productController controller.ProductController = controller.NewProductController(productService, jwtService)
-		authController controller.AuthController = controller.NewAuthController(tokoService, authService, jwtService)
+		authController      controller.AuthController      = controller.NewAuthController(tokoService, authService, jwtService)
+		tokoController      controller.TokoController      = controller.NewTokoController(tokoService)
+		produkController    controller.ProdukController    = controller.NewProdukController(produkService)
+		transaksiController controller.TransaksiController = controller.NewTransaksiController(transaksiService, jwtService)
 	)
 
 	defer config.CloseDatabaseConnection(db)
@@ -38,7 +44,10 @@ func main() {
 	server := gin.Default()
 
 	routes.AuthRoutes(server, authController)
-	// routes.ProductRoutes(server, productController, jwtService, productService)
+	routes.TokoRoutes(server, tokoController, jwtService)
+	routes.ProdukRoutes(server, produkController, jwtService)
+	routes.TransaksiRoutes(server, transaksiController, jwtService)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"

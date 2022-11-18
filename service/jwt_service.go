@@ -12,7 +12,7 @@ import (
 type JWTService interface {
 	GenerateToken(tokoID string) string
 	ValidateToken(token string) (*jwt.Token, error)
-	GetTokoIDByToken(token string) (uint, error)
+	GetTokoIDByToken(token string) (uint64, error)
 }
 
 type jwtCustomClaim struct {
@@ -66,7 +66,7 @@ func (j *jwtService) ValidateToken(token string) (*jwt.Token, error) {
 	})
 }
 
-func (j *jwtService) GetTokoIDByToken(token string) (uint, error) {
+func (j *jwtService) GetTokoIDByToken(token string) (uint64, error) {
 	t_Token, err := j.ValidateToken(token)
 	if err != nil {
 		return 0, err
@@ -74,5 +74,5 @@ func (j *jwtService) GetTokoIDByToken(token string) (uint, error) {
 	claims := t_Token.Claims.(jwt.MapClaims)
 	id := fmt.Sprintf("%v", claims["toko_id"])
 	idUint, _ := strconv.ParseUint(id, 10, 64)
-	return uint(idUint), nil
+	return idUint, nil
 }
