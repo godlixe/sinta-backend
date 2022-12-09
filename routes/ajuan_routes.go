@@ -16,6 +16,5 @@ func AjuanRoutes(router *gin.Engine, ajuanController controller.AjuanController,
 		ajuanRoutes.POST("", ajuanController.CreateAjuan)
 		ajuanRoutes.POST("/accept/:id", ajuanController.AcceptAjuan)
 		ajuanRoutes.POST("/decline/:id", ajuanController.DeclineAjuan)
-
 	}
 }
