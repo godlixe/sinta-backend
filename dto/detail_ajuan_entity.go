@@ -1,10 +1,10 @@
 package dto
 
 type DetailAjuanCreateDTO struct {
-	ProdukID uint64 `json:"produk_id"`
+	ProdukID uint64 `json:"produk_id" binding:"required"`
 	AjuanID  uint64 `json:"ajuan_id"`
 	TokoID   uint64 `json:"toko_id"`
-	Jumlah   uint64 `json:"jumlah"`
+	Jumlah   uint64 `json:"jumlah" binding:"required"`
 }
 
 type DetailAjuanUpdateDTO struct {

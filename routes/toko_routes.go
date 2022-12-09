@@ -12,7 +12,7 @@ func TokoRoutes(router *gin.Engine, tokoController controller.TokoController, jw
 	tokoRoutes := router.Group("/toko", middleware.Authenticate(jwtService))
 	{
 		tokoRoutes.GET("", tokoController.GetAllToko)
-		tokoRoutes.PUT("", tokoController.UpdateToko)
+		tokoRoutes.PUT("/:id", tokoController.UpdateToko)
 		tokoRoutes.DELETE("/:id", tokoController.DeleteToko)
 	}
 }

@@ -1,9 +1,9 @@
 package dto
 
 type AjuanCreateDTO struct {
-	Status      bool                   `json:"status"`
+	Status      bool                   `json:"status" binding:"required"`
 	TokoID      uint64                 `json:"toko_id"`
-	DetailAjuan []DetailAjuanCreateDTO `json:"detail_ajuan"`
+	DetailAjuan []DetailAjuanCreateDTO `json:"detail_ajuan" binding:"required"`
 }
 
 type AjuanUpdateDTO struct {

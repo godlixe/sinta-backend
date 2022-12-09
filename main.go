@@ -41,7 +41,7 @@ func main() {
 
 		// productController controller.ProductController = controller.NewProductController(productService, jwtService)
 		authController      controller.AuthController      = controller.NewAuthController(tokoService, authService, jwtService)
-		tokoController      controller.TokoController      = controller.NewTokoController(tokoService)
+		tokoController      controller.TokoController      = controller.NewTokoController(tokoService, jwtService)
 		produkController    controller.ProdukController    = controller.NewProdukController(produkService)
 		transaksiController controller.TransaksiController = controller.NewTransaksiController(transaksiService, jwtService)
 		stokController      controller.StokController      = controller.NewStokController(stokService, jwtService)
@@ -63,7 +63,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "8087"
 	}
 	server.Run(":" + port)
 }

@@ -72,6 +72,8 @@ func (c *ajuanController) CreateAjuan(ctx *gin.Context) {
 		return
 	}
 
+	ajuan.TokoID = tokoID
+
 	result, err := c.ajuanService.CreateAjuan(ctx.Request.Context(), tokoID, ajuan)
 	if err != nil {
 		res := common.BuildErrorResponse("Failed to create ajuan", err.Error(), common.EmptyObj{})

@@ -33,7 +33,7 @@ func (db *transaksiConnection) CreateTransaksi(ctx context.Context, transaksi en
 
 func (db *transaksiConnection) GetAllTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.Transaksi, error) {
 	var daftarTransaksi []entity.Transaksi
-	tx := db.connection.Where(("toko_id"), tokoID).Find(&daftarTransaksi)
+	tx := db.connection.Where(("toko_id"), tokoID).Preload("DetailTransaksi").Find(&daftarTransaksi)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
