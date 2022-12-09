@@ -18,11 +18,13 @@ type TokoController interface {
 
 type tokoController struct {
 	tokoService service.TokoService
+	jwtService  service.JWTService
 }
 
-func NewTokoController(ts service.TokoService) TokoController {
+func NewTokoController(ts service.TokoService, js service.JWTService) TokoController {
 	return &tokoController{
 		tokoService: ts,
+		jwtService:  js,
 	}
 }
 
@@ -39,6 +41,8 @@ func (c *tokoController) GetAllToko(ctx *gin.Context) {
 }
 
 func (c *tokoController) UpdateToko(ctx *gin.Context) {
+	tokoID, _ := strconv.ParseUint(ctx.Param("id"), 10, 64)
+
 	var toko dto.TokoUpdateDTO
 	if err := ctx.ShouldBind(&toko); err != nil {
 		res := common.BuildErrorResponse("Failed to bind produk", err.Error(), common.EmptyObj{})
@@ -46,6 +50,7 @@ func (c *tokoController) UpdateToko(ctx *gin.Context) {
 		return
 	}
 
+	toko.ID = tokoID
 	result, err := c.tokoService.UpdateToko(ctx.Request.Context(), toko)
 	if err != nil {
 		res := common.BuildErrorResponse("Failed to update toko", err.Error(), common.EmptyObj{})
