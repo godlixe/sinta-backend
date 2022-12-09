@@ -27,7 +27,7 @@ func NewStokRepository(db *gorm.DB) StokRepository {
 
 func (db *stokConnection) GetStokByTokoID(ctx context.Context, tokoID uint64) (entity.StokBatch, error) {
 	var stok entity.StokBatch
-	tx := db.connection.Where(("toko_id = ?"), tokoID).Find(&stok.DaftarStok)
+	tx := db.connection.Where(("toko_id = ?"), tokoID).Preload("product").Find(&stok.DaftarStok)
 	if tx.Error != nil {
 		return entity.StokBatch{}, tx.Error
 	}
