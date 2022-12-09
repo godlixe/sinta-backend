@@ -9,9 +9,9 @@ import (
 )
 
 func ProdukRoutes(router *gin.Engine, produkController controller.ProdukController, jwtService service.JWTService) {
-	produkRoutes := router.Group("/produk", middleware.Authenticate(jwtService))
+	produkRoutes := router.Group("/produk")
 	{
 		produkRoutes.GET("", produkController.GetAllProduk)
-		produkRoutes.POST("", produkController.CreateProduk)
+		produkRoutes.POST("", middleware.Authenticate(jwtService), produkController.CreateProduk)
 	}
 }
