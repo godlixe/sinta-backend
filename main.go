@@ -5,11 +5,11 @@ import (
 	"os"  //log.Println
 	"sinta-backend/config"
 	"sinta-backend/controller"
+	"sinta-backend/middleware"
 	"sinta-backend/repository"
 	"sinta-backend/routes"
 	"sinta-backend/service"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"gorm.io/gorm"
@@ -53,7 +53,10 @@ func main() {
 	defer config.CloseDatabaseConnection(db)
 
 	server := gin.Default()
-	server.Use(cors.Default())
+	server.Use(
+		middleware.CORSMiddleware(),
+		gin.Recovery(),
+	)
 	routes.AuthRoutes(server, authController)
 	routes.TokoRoutes(server, tokoController, jwtService)
 	routes.ProdukRoutes(server, produkController, jwtService)
