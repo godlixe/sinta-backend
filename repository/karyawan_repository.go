@@ -54,7 +54,7 @@ func (db *karyawanConnection) UpdateKaryawan(ctx context.Context, karyawan entit
 }
 
 func (db *karyawanConnection) DeleteKaryawan(ctx context.Context, karyawanID uint64) error {
-	tx := db.connection.Where(("id"), karyawanID).Delete(&entity.Karyawan{})
+	tx := db.connection.Where(("id = ?"), karyawanID).Delete(&entity.Karyawan{})
 	if tx.Error != nil {
 		return tx.Error
 	}
