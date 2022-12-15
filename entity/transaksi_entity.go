@@ -7,3 +7,8 @@ type Transaksi struct {
 	DetailTransaksi []DetailTransaksi `json:"detail_transaksi"`
 	BaseModel
 }
+
+type TransaksiTotal struct {
+	NamaToko string `json:"nama_toko"`
+	Total    int    `json:"total"`
+}

@@ -12,6 +12,12 @@ import (
 type TransaksiService interface {
 	CreateTransaksi(ctx context.Context, transaksiDTO dto.TransaksiCreateDTO, tokoID uint64) (entity.Transaksi, error)
 	GetAllTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.Transaksi, error)
+	GetHarianTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.Transaksi, error)
+	GetMingguanTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.Transaksi, error)
+	GetBulananTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.Transaksi, error)
+	GetHarianTotal(ctx context.Context) ([]entity.TransaksiTotal, error)
+	GetMingguanTotal(ctx context.Context) ([]entity.TransaksiTotal, error)
+	GetBulananTotal(ctx context.Context) ([]entity.TransaksiTotal, error)
 }
 
 type transaksiService struct {
@@ -50,4 +56,28 @@ func (s *transaksiService) CreateTransaksi(ctx context.Context, transaksiDTO dto
 
 func (s *transaksiService) GetAllTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.Transaksi, error) {
 	return s.transaksiRepository.GetAllTransaksiByTokoID(ctx, tokoID)
+}
+
+func (s *transaksiService) GetHarianTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.Transaksi, error) {
+	return s.transaksiRepository.GetHarianTransaksiByTokoID(ctx, tokoID)
+}
+
+func (s *transaksiService) GetMingguanTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.Transaksi, error) {
+	return s.transaksiRepository.GetMingguanTransaksiByTokoID(ctx, tokoID)
+}
+
+func (s *transaksiService) GetBulananTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.Transaksi, error) {
+	return s.transaksiRepository.GetBulananTransaksiByTokoID(ctx, tokoID)
+}
+
+func (s *transaksiService) GetHarianTotal(ctx context.Context) ([]entity.TransaksiTotal, error) {
+	return s.transaksiRepository.GetHarianTotal(ctx)
+}
+
+func (s *transaksiService) GetMingguanTotal(ctx context.Context) ([]entity.TransaksiTotal, error) {
+	return s.transaksiRepository.GetMingguanTotal(ctx)
+}
+
+func (s *transaksiService) GetBulananTotal(ctx context.Context) ([]entity.TransaksiTotal, error) {
+	return s.transaksiRepository.GetBulananTotal(ctx)
 }
