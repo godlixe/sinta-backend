@@ -71,7 +71,7 @@ func (db *transaksiConnection) GetMingguanTransaksiByTokoID(ctx context.Context,
 	var daftarTransaksi []entity.DetailTransaksi
 	currTime := time.Now()
 	currTime = currTime.AddDate(0, 0, -7)
-	subQueryMingguan := db.connection.Model(&entity.Transaksi{}).Select("id").Where("created_at >= ?", currTime)
+	subQueryMingguan := db.connection.Model(&entity.Transaksi{}).Select("id").Where(("toko_id = ?"), tokoID).Where("created_at >= ?", currTime)
 	tx := db.connection.Model(&entity.DetailTransaksi{}).Where("transaksi_id = (?)", subQueryMingguan).Preload("Produk").Find(&daftarTransaksi)
 	if tx.Error != nil {
 		return nil, tx.Error
@@ -90,7 +90,7 @@ func (db *transaksiConnection) GetBulananTransaksiByTokoID(ctx context.Context, 
 	firstOfMonth := time.Date(currentYear, currentMonth, 1, 0, 0, 0, 0, currentLocation)
 	lastOfMonth := firstOfMonth.AddDate(0, 1, -1)
 
-	subQueryBulanan := db.connection.Model(&entity.Transaksi{}).Select("id").Where("created_at >= ?", firstOfMonth).Where("created_at <= ?", lastOfMonth)
+	subQueryBulanan := db.connection.Model(&entity.Transaksi{}).Select("id").Where(("toko_id = ?"), tokoID).Where("created_at >= ?", firstOfMonth).Where("created_at <= ?", lastOfMonth)
 	tx := db.connection.Model(&entity.DetailTransaksi{}).Where("transaksi_id = (?)", subQueryBulanan).Preload("Produk").Find(&daftarTransaksi)
 	if tx.Error != nil {
 		return nil, tx.Error

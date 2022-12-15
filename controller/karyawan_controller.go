@@ -59,13 +59,15 @@ func (c *karyawanController) GetAllKaryawan(ctx *gin.Context) {
 }
 
 func (c *karyawanController) UpdateKaryawan(ctx *gin.Context) {
+	karyawanID, _ := strconv.ParseUint(ctx.Param("id"), 10, 64)
+
 	var karyawan dto.KaryawanUpdateDTO
 	if err := ctx.ShouldBind(&karyawan); err != nil {
 		res := common.BuildErrorResponse("Failed to bind karyawan", err.Error(), common.EmptyObj{})
 		ctx.JSON(http.StatusBadRequest, res)
 		return
 	}
-
+	karyawan.ID = karyawanID
 	result, err := c.karyawanService.UpdateKaryawan(ctx.Request.Context(), karyawan)
 	if err != nil {
 		res := common.BuildErrorResponse("Failed to update karyawan", err.Error(), common.EmptyObj{})

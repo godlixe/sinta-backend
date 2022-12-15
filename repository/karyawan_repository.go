@@ -45,7 +45,7 @@ func (db *karyawanConnection) GetAllKaryawan(ctx context.Context) ([]entity.Kary
 }
 
 func (db *karyawanConnection) UpdateKaryawan(ctx context.Context, karyawan entity.Karyawan) (entity.Karyawan, error) {
-	tx := db.connection.Save(&karyawan)
+	tx := db.connection.Updates(&karyawan)
 	if tx.Error != nil {
 		return entity.Karyawan{}, tx.Error
 	}
