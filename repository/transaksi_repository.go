@@ -91,7 +91,7 @@ func (db *transaksiConnection) GetBulananTransaksiByTokoID(ctx context.Context, 
 	lastOfMonth := firstOfMonth.AddDate(0, 1, -1)
 
 	subQueryBulanan := db.connection.Model(&entity.Transaksi{}).Select("id").Where(("toko_id = ?"), tokoID).Where("created_at >= ?", firstOfMonth).Where("created_at <= ?", lastOfMonth)
-	tx := db.connection.Model(&entity.DetailTransaksi{}).Where("transaksi_id = (?)", subQueryBulanan).Preload("Produk").Find(&daftarTransaksi)
+	tx := db.connection.Model(&entity.DetailTransaksi{}).Where("transaksi_id IN (?)", subQueryBulanan).Preload("Produk").Find(&daftarTransaksi)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
