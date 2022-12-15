@@ -12,9 +12,9 @@ import (
 type TransaksiService interface {
 	CreateTransaksi(ctx context.Context, transaksiDTO dto.TransaksiCreateDTO, tokoID uint64) (entity.Transaksi, error)
 	GetAllTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.Transaksi, error)
-	GetHarianTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.Transaksi, error)
-	GetMingguanTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.Transaksi, error)
-	GetBulananTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.Transaksi, error)
+	GetHarianTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.DetailTransaksi, error)
+	GetMingguanTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.DetailTransaksi, error)
+	GetBulananTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.DetailTransaksi, error)
 	GetHarianTotal(ctx context.Context) ([]entity.TransaksiTotal, error)
 	GetMingguanTotal(ctx context.Context) ([]entity.TransaksiTotal, error)
 	GetBulananTotal(ctx context.Context) ([]entity.TransaksiTotal, error)
@@ -58,15 +58,15 @@ func (s *transaksiService) GetAllTransaksiByTokoID(ctx context.Context, tokoID u
 	return s.transaksiRepository.GetAllTransaksiByTokoID(ctx, tokoID)
 }
 
-func (s *transaksiService) GetHarianTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.Transaksi, error) {
+func (s *transaksiService) GetHarianTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.DetailTransaksi, error) {
 	return s.transaksiRepository.GetHarianTransaksiByTokoID(ctx, tokoID)
 }
 
-func (s *transaksiService) GetMingguanTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.Transaksi, error) {
+func (s *transaksiService) GetMingguanTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.DetailTransaksi, error) {
 	return s.transaksiRepository.GetMingguanTransaksiByTokoID(ctx, tokoID)
 }
 
-func (s *transaksiService) GetBulananTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.Transaksi, error) {
+func (s *transaksiService) GetBulananTransaksiByTokoID(ctx context.Context, tokoID uint64) ([]entity.DetailTransaksi, error) {
 	return s.transaksiRepository.GetBulananTransaksiByTokoID(ctx, tokoID)
 }
 
