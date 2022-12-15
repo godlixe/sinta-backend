@@ -59,7 +59,7 @@ func (db *transaksiConnection) GetHarianTransaksiByTokoID(ctx context.Context, t
 	lastOfDay := firstOfDay.AddDate(0, 0, 1)
 
 	subQueryHarian := db.connection.Model(&entity.Transaksi{}).Select("id").Where(("toko_id = ?"), tokoID).Where("created_at >= ?", firstOfDay).Where("created_at <= ?", lastOfDay)
-	tx := db.connection.Model(&entity.DetailTransaksi{}).Where("transaksi_id = (?)", subQueryHarian).Preload("Produk").Find(&daftarTransaksi)
+	tx := db.connection.Model(&entity.DetailTransaksi{}).Where("transaksi_id IN (?)", subQueryHarian).Preload("Produk").Find(&daftarTransaksi)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -72,7 +72,7 @@ func (db *transaksiConnection) GetMingguanTransaksiByTokoID(ctx context.Context,
 	currTime := time.Now()
 	currTime = currTime.AddDate(0, 0, -7)
 	subQueryMingguan := db.connection.Model(&entity.Transaksi{}).Select("id").Where(("toko_id = ?"), tokoID).Where("created_at >= ?", currTime)
-	tx := db.connection.Model(&entity.DetailTransaksi{}).Where("transaksi_id = (?)", subQueryMingguan).Preload("Produk").Find(&daftarTransaksi)
+	tx := db.connection.Model(&entity.DetailTransaksi{}).Where("transaksi_id IN (?)", subQueryMingguan).Preload("Produk").Find(&daftarTransaksi)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
