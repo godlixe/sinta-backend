@@ -37,7 +37,7 @@ func (db *ajuanConnection) GetAllAjuan(ctx context.Context) ([]entity.Ajuan, err
 
 func (db *ajuanConnection) GetAjuanByID(ctx context.Context, ajuanID uint64) (entity.Ajuan, error) {
 	var ajuan entity.Ajuan
-	tx := db.connection.Preload("DetailAjuan").Find(&ajuan)
+	tx := db.connection.Where("id = ?", ajuanID).Preload("DetailAjuan").Find(&ajuan)
 	if tx.Error != nil {
 		return entity.Ajuan{}, tx.Error
 	}
