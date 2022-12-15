@@ -36,7 +36,7 @@ func (db *karyawanConnection) CreateKaryawan(ctx context.Context, karyawan entit
 func (db *karyawanConnection) GetAllKaryawan(ctx context.Context) ([]entity.Karyawan, error) {
 	var daftarKaryawan []entity.Karyawan
 
-	tx := db.connection.Find(&daftarKaryawan)
+	tx := db.connection.Debug().Find(&daftarKaryawan)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -54,7 +54,7 @@ func (db *karyawanConnection) UpdateKaryawan(ctx context.Context, karyawan entit
 }
 
 func (db *karyawanConnection) DeleteKaryawan(ctx context.Context, karyawanID uint64) error {
-	tx := db.connection.Where(("id = ?"), karyawanID).Delete(&entity.Karyawan{})
+	tx := db.connection.Debug().Where(("id = ?"), karyawanID).Delete(&entity.Karyawan{})
 	if tx.Error != nil {
 		return tx.Error
 	}
