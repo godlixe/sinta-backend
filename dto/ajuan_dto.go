@@ -1,7 +1,7 @@
 package dto
 
 type AjuanCreateDTO struct {
-	Status      bool                   `json:"status" binding:"required"`
+	Status      bool                   `json:"status"`
 	TokoID      uint64                 `json:"toko_id"`
 	DetailAjuan []DetailAjuanCreateDTO `json:"detail_ajuan" binding:"required"`
 }
