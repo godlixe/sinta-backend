@@ -27,7 +27,7 @@ func NewAjuanRepository(db *gorm.DB) AjuanRepository {
 
 func (db *ajuanConnection) GetAllAjuan(ctx context.Context) ([]entity.Ajuan, error) {
 	var daftarAjuan []entity.Ajuan
-	tx := db.connection.Preload("Toko").Find(&daftarAjuan)
+	tx := db.connection.Where(("status = ?"), "false").Preload("Toko").Find(&daftarAjuan)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -46,7 +46,7 @@ func (db *ajuanConnection) GetAjuanByID(ctx context.Context, ajuanID uint64) (en
 }
 
 func (db *ajuanConnection) CreateAjuan(ctx context.Context, ajuan entity.Ajuan) (entity.Ajuan, error) {
-	tx := db.connection.Where(("status = ?"), "false").Create(&ajuan)
+	tx := db.connection.Create(&ajuan)
 	if tx.Error != nil {
 		return entity.Ajuan{}, tx.Error
 	}
