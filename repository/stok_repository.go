@@ -54,7 +54,7 @@ func (db *stokConnection) UpdateStok(ctx context.Context, stok entity.StokBatch)
 }
 
 func (db *stokConnection) IncreaseStok(ctx context.Context, tokoID uint64, produkID uint64, amount uint64) error {
-	tx := db.connection.Model(&entity.Stok{}).
+	tx := db.connection.Debug().Model(&entity.Stok{}).
 		Where(("toko_id = ?"), tokoID).
 		Where(("produk_id = ?"), produkID).
 		UpdateColumn("jumlah", gorm.Expr("jumlah + ?", amount))
