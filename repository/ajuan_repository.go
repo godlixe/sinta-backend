@@ -27,7 +27,7 @@ func NewAjuanRepository(db *gorm.DB) AjuanRepository {
 
 func (db *ajuanConnection) GetAllAjuan(ctx context.Context) ([]entity.Ajuan, error) {
 	var daftarAjuan []entity.Ajuan
-	tx := db.connection.Find(&daftarAjuan)
+	tx := db.connection.Preload("Toko").Find(&daftarAjuan)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
