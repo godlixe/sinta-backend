@@ -11,6 +11,7 @@ import (
 
 type StokController interface {
 	GetStokByTokoID(ctx *gin.Context)
+	GetProdukStokByTokoID(ctx *gin.Context)
 	InsertStok(ctx *gin.Context)
 	UpdateStok(ctx *gin.Context)
 }
@@ -30,6 +31,19 @@ func NewStokController(ss service.StokService, js service.JWTService) StokContro
 func (c *stokController) GetStokByTokoID(ctx *gin.Context) {
 	tokoID := ctx.MustGet("tokoID").(uint64)
 	result, err := c.stokService.GetStokByTokoID(ctx.Request.Context(), tokoID)
+	if err != nil {
+		res := common.BuildErrorResponse("Failed to get stok", err.Error(), common.EmptyObj{})
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	res := common.BuildResponse(true, "OK", result)
+	ctx.JSON(http.StatusOK, res)
+}
+
+func (c *stokController) GetProdukStokByTokoID(ctx *gin.Context) {
+	tokoID := ctx.MustGet("tokoID").(uint64)
+	result, err := c.stokService.GetProdukStokByTokoID(ctx.Request.Context(), tokoID)
 	if err != nil {
 		res := common.BuildErrorResponse("Failed to get stok", err.Error(), common.EmptyObj{})
 		ctx.JSON(http.StatusBadRequest, res)

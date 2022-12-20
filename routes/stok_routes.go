@@ -12,6 +12,7 @@ func StokRoutes(router *gin.Engine, stokController controller.StokController, jw
 	stokRoutes := router.Group("/stok", middleware.Authenticate(jwtService, "toko"))
 	{
 		stokRoutes.GET("", stokController.GetStokByTokoID)
+		stokRoutes.GET("/produk", stokController.GetProdukStokByTokoID)
 		stokRoutes.POST("", stokController.InsertStok)
 		stokRoutes.PUT("", stokController.UpdateStok)
 

@@ -11,6 +11,7 @@ import (
 
 type StokService interface {
 	GetStokByTokoID(ctx context.Context, tokoID uint64) (entity.StokBatch, error)
+	GetProdukStokByTokoID(ctx context.Context, tokoID uint64) ([]entity.StokToko, error)
 	InsertStok(ctx context.Context, stokDTO dto.StokBatchCreateDTO, tokoID uint64) (entity.StokBatch, error)
 	UpdateStok(ctx context.Context, stokDTO dto.StokBatchUpdateDTO, tokoID uint64) (entity.StokBatch, error)
 	IncreaseStok(ctx context.Context, tokoID uint64, produkID uint64, amount uint64) error
@@ -29,6 +30,10 @@ func NewStokService(sr repository.StokRepository) StokService {
 
 func (s *stokService) GetStokByTokoID(ctx context.Context, tokoID uint64) (entity.StokBatch, error) {
 	return s.stokRepository.GetStokByTokoID(ctx, tokoID)
+}
+
+func (s *stokService) GetProdukStokByTokoID(ctx context.Context, tokoID uint64) ([]entity.StokToko, error) {
+	return s.stokRepository.GetProdukStokByTokoID(ctx, tokoID)
 }
 
 func (s *stokService) InsertStok(ctx context.Context, stokDTO dto.StokBatchCreateDTO, tokoID uint64) (entity.StokBatch, error) {
