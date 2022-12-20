@@ -15,8 +15,8 @@ type StokBatch struct {
 }
 
 type StokToko struct {
-	ID         uint64 `json:"id"`
-	NamaProduk string `json:"nama"`
-	Jumlah     uint64 `json:"jumlah"`
-	Harga      uint64 `json:"harga"`
+	ID     uint64 `json:"id"`
+	Nama   string `json:"nama"`
+	Jumlah uint64 `json:"jumlah"`
+	Harga  uint64 `json:"harga"`
 }
