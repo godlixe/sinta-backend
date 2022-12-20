@@ -5,7 +5,6 @@ import (
 	"sinta-backend/common"
 	"sinta-backend/dto"
 	"sinta-backend/service"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,14 +28,7 @@ func NewStokController(ss service.StokService, js service.JWTService) StokContro
 }
 
 func (c *stokController) GetStokByTokoID(ctx *gin.Context) {
-	token := ctx.MustGet("token").(string)
-	tokoID, err := c.jwtService.GetTokoIDByToken(token)
-	if err != nil {
-		res := common.BuildErrorResponse("token invalid", err.Error(), common.EmptyObj{})
-		ctx.JSON(http.StatusBadRequest, res)
-		return
-	}
-
+	tokoID := ctx.MustGet("tokoID").(uint64)
 	result, err := c.stokService.GetStokByTokoID(ctx.Request.Context(), tokoID)
 	if err != nil {
 		res := common.BuildErrorResponse("Failed to get stok", err.Error(), common.EmptyObj{})
@@ -49,8 +41,7 @@ func (c *stokController) GetStokByTokoID(ctx *gin.Context) {
 }
 
 func (c *stokController) InsertStok(ctx *gin.Context) {
-	tokoID := ctx.MustGet("tokoID").(string)
-	tokoIDUint, _ := strconv.ParseUint(tokoID, 10, 64)
+	tokoID := ctx.MustGet("tokoID").(uint64)
 	var stokDTO dto.StokBatchCreateDTO
 	if err := ctx.ShouldBind(&stokDTO); err != nil {
 		res := common.BuildErrorResponse("Failed to bind stok", err.Error(), common.EmptyObj{})
@@ -58,7 +49,7 @@ func (c *stokController) InsertStok(ctx *gin.Context) {
 		return
 	}
 
-	result, err := c.stokService.InsertStok(ctx.Request.Context(), stokDTO, tokoIDUint)
+	result, err := c.stokService.InsertStok(ctx.Request.Context(), stokDTO, tokoID)
 	if err != nil {
 		res := common.BuildErrorResponse("Failed to create stok", err.Error(), common.EmptyObj{})
 		ctx.JSON(http.StatusBadRequest, res)
@@ -70,14 +61,7 @@ func (c *stokController) InsertStok(ctx *gin.Context) {
 }
 
 func (c *stokController) UpdateStok(ctx *gin.Context) {
-	token := ctx.MustGet("token").(string)
-	tokoID, err := c.jwtService.GetTokoIDByToken(token)
-	if err != nil {
-		res := common.BuildErrorResponse("token invalid", err.Error(), common.EmptyObj{})
-		ctx.JSON(http.StatusBadRequest, res)
-		return
-	}
-
+	tokoID := ctx.MustGet("tokoID").(uint64)
 	var stokDTO dto.StokBatchUpdateDTO
 	if err := ctx.ShouldBind(&stokDTO); err != nil {
 		res := common.BuildErrorResponse("Failed to bind stok", err.Error(), common.EmptyObj{})
