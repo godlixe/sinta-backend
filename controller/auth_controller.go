@@ -5,7 +5,6 @@ import (
 	"sinta-backend/common"
 	"sinta-backend/dto"
 	"sinta-backend/service"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -45,14 +44,18 @@ func (c *authController) Register(ctx *gin.Context) {
 		return
 	}
 
+	if tokoDTO.Role == "" {
+		tokoDTO.Role = "toko"
+	}
+
 	createdToko, err := c.tokoService.CreateToko(ctx.Request.Context(), tokoDTO)
 	if err != nil {
 		response := common.BuildErrorResponse("Failed to process request", err.Error(), common.EmptyObj{})
 		ctx.JSON(http.StatusConflict, response)
 		return
 	}
-	tokoID := strconv.FormatUint(uint64(createdToko.ID), 10)
-	token := c.jwtService.GenerateToken(tokoID)
+	// tokoID := strconv.FormatUint(uint64(createdToko.ID), 10)
+	token := c.jwtService.GenerateToken(createdToko.ID, createdToko.Role)
 
 	response := common.BuildResponse(true, "OK", token)
 	ctx.JSON(http.StatusCreated, response)
@@ -79,8 +82,8 @@ func (c *authController) Login(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
 		return
 	}
-	tokoID := strconv.FormatUint(uint64(toko.ID), 10)
-	generatedToken := c.jwtService.GenerateToken(tokoID)
+	// tokoID := strconv.FormatUint(uint64(toko.ID), 10)
+	generatedToken := c.jwtService.GenerateToken(toko.ID, toko.Role)
 	response := common.BuildResponse(true, "OK", generatedToken)
 	ctx.JSON(http.StatusOK, response)
 }

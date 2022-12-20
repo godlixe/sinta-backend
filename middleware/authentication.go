@@ -2,17 +2,15 @@ package middleware
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"sinta-backend/common"
 	"sinta-backend/service"
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v4"
 )
 
-func Authenticate(jwtService service.JWTService) gin.HandlerFunc {
+func Authenticate(jwtService service.JWTService, role string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
@@ -27,15 +25,35 @@ func Authenticate(jwtService service.JWTService) gin.HandlerFunc {
 		}
 		authHeader = strings.Replace(authHeader, "Bearer ", "", -1)
 		token, err := jwtService.ValidateToken(authHeader)
+		if err != nil {
+			response := common.BuildErrorResponse("Invalid Token", err.Error(), nil)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
+			return
+		}
+
 		if !token.Valid {
-			claims := token.Claims.(jwt.MapClaims)
-			fmt.Println(claims)
-			log.Println(err)
 			response := common.BuildErrorResponse("Access denied", "You dont have access", nil)
 			c.AbortWithStatusJSON(http.StatusForbidden, response)
 			return
 		}
-		c.Set("token", authHeader)
+
+		tokoRole, err := jwtService.GetRoleByToken(string(authHeader))
+		fmt.Println("ROLE", tokoRole)
+		if err != nil || (tokoRole != "admin" && tokoRole != role) {
+			response := common.BuildErrorResponse("Access denied", "You dont have access", nil)
+			c.AbortWithStatusJSON(http.StatusForbidden, response)
+			return
+		}
+
+		// get userID from token
+		tokoID, err := jwtService.GetTokoIDByToken(authHeader)
+		if err != nil {
+			response := common.BuildErrorResponse("Invalid Token", err.Error(), nil)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
+			return
+		}
+		fmt.Println("ROLE", tokoRole)
+		c.Set("tokoID", tokoID)
 		c.Next()
 	}
 }

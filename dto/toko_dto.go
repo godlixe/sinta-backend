@@ -4,6 +4,7 @@ type TokoCreateDTO struct {
 	Nama     string `json:"nama" binding:"required"`
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
+	Role     string `json:"role"`
 }
 
 type TokoUpdateDTO struct {

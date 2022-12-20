@@ -11,8 +11,8 @@ import (
 func TransaksiRoutes(router *gin.Engine, transaksiController controller.TransaksiController, jwtService service.JWTService) {
 	transaksiRoutes := router.Group("/transaksi")
 	{
-		transaksiRoutes.GET("", middleware.Authenticate(jwtService), transaksiController.GetAllTransaksiByTokoID)
-		transaksiRoutes.POST("", middleware.Authenticate(jwtService), transaksiController.CreateTransaksi)
+		transaksiRoutes.GET("", middleware.Authenticate(jwtService, "toko"), transaksiController.GetAllTransaksiByTokoID)
+		transaksiRoutes.POST("", middleware.Authenticate(jwtService, "toko"), transaksiController.CreateTransaksi)
 		transaksiRoutes.GET("/harian/:tokoID", transaksiController.GetHarianTransaksiByTokoID)
 		transaksiRoutes.GET("/mingguan/:tokoID", transaksiController.GetMingguanTransaksiByTokoID)
 		transaksiRoutes.GET("/bulanan/:tokoID", transaksiController.GetBulananTransaksiByTokoID)

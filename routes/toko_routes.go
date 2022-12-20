@@ -9,7 +9,7 @@ import (
 )
 
 func TokoRoutes(router *gin.Engine, tokoController controller.TokoController, jwtService service.JWTService) {
-	tokoRoutes := router.Group("/toko", middleware.Authenticate(jwtService))
+	tokoRoutes := router.Group("/toko", middleware.Authenticate(jwtService, "toko"))
 	{
 		tokoRoutes.GET("", tokoController.GetAllToko)
 		tokoRoutes.PUT("/:id", tokoController.UpdateToko)

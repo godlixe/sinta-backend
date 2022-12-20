@@ -12,6 +12,6 @@ func ProdukRoutes(router *gin.Engine, produkController controller.ProdukControll
 	produkRoutes := router.Group("/produk")
 	{
 		produkRoutes.GET("", produkController.GetAllProduk)
-		produkRoutes.POST("", middleware.Authenticate(jwtService), produkController.CreateProduk)
+		produkRoutes.POST("", middleware.Authenticate(jwtService, "admin"), produkController.CreateProduk)
 	}
 }

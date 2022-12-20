@@ -11,6 +11,7 @@ type Toko struct {
 	Nama     string `json:"nama"`
 	Username string `json:"username"`
 	Password string `json:"-"`
+	Role     string `json:"role"`
 	BaseModel
 }
 

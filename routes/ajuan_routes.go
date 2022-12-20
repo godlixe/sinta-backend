@@ -13,7 +13,7 @@ func AjuanRoutes(router *gin.Engine, ajuanController controller.AjuanController,
 	{
 		ajuanRoutes.GET("", ajuanController.GetAllAjuan)
 		ajuanRoutes.GET("/:id", ajuanController.GetAjuanByID)
-		ajuanRoutes.POST("", middleware.Authenticate(jwtService), ajuanController.CreateAjuan)
+		ajuanRoutes.POST("", middleware.Authenticate(jwtService, "toko"), ajuanController.CreateAjuan)
 		ajuanRoutes.POST("/accept/:id", ajuanController.AcceptAjuan)
 		ajuanRoutes.POST("/decline/:id", ajuanController.DeclineAjuan)
 	}
