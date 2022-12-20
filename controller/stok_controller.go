@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 	"sinta-backend/common"
 	"sinta-backend/dto"
 	"sinta-backend/service"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -49,15 +49,8 @@ func (c *stokController) GetStokByTokoID(ctx *gin.Context) {
 }
 
 func (c *stokController) InsertStok(ctx *gin.Context) {
-	token := ctx.MustGet("token").(string)
-	tokoID, err := c.jwtService.GetTokoIDByToken(token)
-	fmt.Println("tokoID", tokoID)
-	if err != nil {
-		res := common.BuildErrorResponse("token invalid", err.Error(), common.EmptyObj{})
-		ctx.JSON(http.StatusBadRequest, res)
-		return
-	}
-
+	tokoID := ctx.MustGet("tokoID").(string)
+	tokoIDUint, _ := strconv.ParseUint(tokoID, 10, 64)
 	var stokDTO dto.StokBatchCreateDTO
 	if err := ctx.ShouldBind(&stokDTO); err != nil {
 		res := common.BuildErrorResponse("Failed to bind stok", err.Error(), common.EmptyObj{})
@@ -65,7 +58,7 @@ func (c *stokController) InsertStok(ctx *gin.Context) {
 		return
 	}
 
-	result, err := c.stokService.InsertStok(ctx.Request.Context(), stokDTO, tokoID)
+	result, err := c.stokService.InsertStok(ctx.Request.Context(), stokDTO, tokoIDUint)
 	if err != nil {
 		res := common.BuildErrorResponse("Failed to create stok", err.Error(), common.EmptyObj{})
 		ctx.JSON(http.StatusBadRequest, res)
