@@ -12,3 +12,8 @@ type BaseModel struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt
 }
+
+type AuthReturn struct {
+	Token string `json:"token"`
+	Role  string `json:"role"`
+}

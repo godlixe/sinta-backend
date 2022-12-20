@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"sinta-backend/common"
 	"sinta-backend/dto"
+	"sinta-backend/entity"
 	"sinta-backend/service"
 
 	"github.com/gin-gonic/gin"
@@ -84,6 +85,7 @@ func (c *authController) Login(ctx *gin.Context) {
 	}
 	// tokoID := strconv.FormatUint(uint64(toko.ID), 10)
 	generatedToken := c.jwtService.GenerateToken(toko.ID, toko.Role)
-	response := common.BuildResponse(true, "OK", generatedToken)
+	authResponse := entity.AuthReturn{Token: generatedToken, Role: toko.Role}
+	response := common.BuildResponse(true, "OK", authResponse)
 	ctx.JSON(http.StatusOK, response)
 }
