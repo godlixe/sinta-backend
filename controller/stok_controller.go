@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"sinta-backend/common"
 	"sinta-backend/dto"
@@ -50,6 +51,7 @@ func (c *stokController) GetStokByTokoID(ctx *gin.Context) {
 func (c *stokController) InsertStok(ctx *gin.Context) {
 	token := ctx.MustGet("token").(string)
 	tokoID, err := c.jwtService.GetTokoIDByToken(token)
+	fmt.Println("tokoID", tokoID)
 	if err != nil {
 		res := common.BuildErrorResponse("token invalid", err.Error(), common.EmptyObj{})
 		ctx.JSON(http.StatusBadRequest, res)
