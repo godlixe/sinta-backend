@@ -53,6 +53,7 @@ func Authenticate(jwtService service.JWTService, role string) gin.HandlerFunc {
 			return
 		}
 		fmt.Println("ROLE", tokoRole)
+		c.Set("token", authHeader)
 		c.Set("tokoID", tokoID)
 		c.Next()
 	}
