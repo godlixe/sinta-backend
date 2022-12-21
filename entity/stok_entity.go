@@ -6,7 +6,7 @@ type Stok struct {
 	Toko     *Toko   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"toko,omitempty"`
 	ProdukID uint64  `json:"produk_id" gorm:"foreignKey"`
 	Produk   *Produk `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"produk,omitempty"`
-	Jumlah   uint64
+	Jumlah   uint64  `json:"jumlah"`
 	BaseModel
 }
 
