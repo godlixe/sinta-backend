@@ -73,6 +73,17 @@ func (db *stokConnection) IncreaseStok(ctx context.Context, tokoID uint64, produ
 		return tx.Error
 	}
 
+	if tx.RowsAffected == 0 {
+		tx := db.connection.Create(&entity.Stok{
+			TokoID:   tokoID,
+			ProdukID: produkID,
+			Jumlah:   amount,
+		})
+		if tx.Error != nil {
+			return tx.Error
+		}
+	}
+
 	return nil
 }
 
