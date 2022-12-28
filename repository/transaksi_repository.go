@@ -59,7 +59,7 @@ func (db *transaksiConnection) GetHarianTransaksiByTokoID(ctx context.Context, t
 	lastOfDay := firstOfDay.AddDate(0, 0, 1)
 
 	subQueryHarian := db.connection.Model(&entity.Transaksi{}).Select("id").Where(("toko_id = ?"), tokoID).Where("created_at >= ?", firstOfDay).Where("created_at <= ?", lastOfDay)
-	tx := db.connection.Model(&entity.DetailTransaksi{}).Where("transaksi_id IN (?)", subQueryHarian).Preload("Produk").Preload("Transaksi").Find(&daftarTransaksi)
+	tx := db.connection.Debug().Model(&entity.DetailTransaksi{}).Where("transaksi_id IN (?)", subQueryHarian).Preload("Produk").Preload("Transaksi").Find(&daftarTransaksi)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
