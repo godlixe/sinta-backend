@@ -101,15 +101,16 @@ func (db *transaksiConnection) GetBulananTransaksiByTokoID(ctx context.Context, 
 
 func (db *transaksiConnection) GetHarianTotal(ctx context.Context) ([]entity.TransaksiTotal, error) {
 	var totalTransaksi []entity.TransaksiTotal
-	now := time.Now()
-	currentYear, currentMonth, currDate := now.Date()
-	currentLocation := now.Location()
+	// now := time.Now()
+	// currentYear, currentMonth, currDate := now.Date()
+	// currentLocation := now.Location()
 
-	firstOfDay := time.Date(currentYear, currentMonth, currDate, 0, 0, 0, 0, currentLocation)
-	lastOfDay := firstOfDay.AddDate(0, 0, 1)
+	// firstOfDay := time.Date(currentYear, currentMonth, currDate, 0, 0, 0, 0, currentLocation)
+	// lastOfDay := firstOfDay.AddDate(0, 0, 1)
 
-	subQueryHarian := db.connection.Model(&entity.Transaksi{}).Select("id").Where("created_at >= ?", firstOfDay).Where("created_at <= ?", lastOfDay)
-	rows, err := db.connection.Model(&entity.DetailTransaksi{}).Select("toko_id, SUM(harga)").Having("transaksi_id = (?)", subQueryHarian).Group("toko_id").Rows()
+	// subQueryHarian := db.connection.Model(&entity.Transaksi{}).Select("id").Where("created_at >= ?", firstOfDay).Where("created_at <= ?", lastOfDay)
+	// rows, err := db.connection.Debug().Model(&entity.DetailTransaksi{}).Select("toko_id, SUM(harga)").Having("transaksi_id = (?)", subQueryHarian).Group("toko_id").Rows()
+	rows, err := db.connection.Debug().Model(&entity.DetailTransaksi{}).Select("toko_id, SUM(harga)").Group("toko_id").Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -125,11 +126,11 @@ func (db *transaksiConnection) GetHarianTotal(ctx context.Context) ([]entity.Tra
 
 func (db *transaksiConnection) GetMingguanTotal(ctx context.Context) ([]entity.TransaksiTotal, error) {
 	var totalTransaksi []entity.TransaksiTotal
-	currTime := time.Now()
-	currTime = currTime.AddDate(0, 0, -7)
+	// currTime := time.Now()
+	// currTime = currTime.AddDate(0, 0, -7)
 
-	subQueryMingguan := db.connection.Model(&entity.Transaksi{}).Select("id").Where("created_at >= ?", currTime)
-	rows, err := db.connection.Model(&entity.DetailTransaksi{}).Select("toko_id, SUM(harga)").Having("transaksi_id = (?)", subQueryMingguan).Group("toko_id").Rows()
+	// subQueryMingguan := db.connection.Model(&entity.Transaksi{}).Select("id").Where("created_at >= ?", currTime)
+	rows, err := db.connection.Debug().Model(&entity.DetailTransaksi{}).Select("toko_id, SUM(harga)").Group("toko_id").Rows()
 	if err != nil {
 		return nil, err
 	}
@@ -147,15 +148,17 @@ func (db *transaksiConnection) GetMingguanTotal(ctx context.Context) ([]entity.T
 func (db *transaksiConnection) GetBulananTotal(ctx context.Context) ([]entity.TransaksiTotal, error) {
 	var totalTransaksi []entity.TransaksiTotal
 
-	now := time.Now()
-	currentYear, currentMonth, _ := now.Date()
-	currentLocation := now.Location()
+	// now := time.Now()
+	// currentYear, currentMonth, _ := now.Date()
+	// currentLocation := now.Location()
 
-	firstOfMonth := time.Date(currentYear, currentMonth, 1, 0, 0, 0, 0, currentLocation)
-	lastOfMonth := firstOfMonth.AddDate(0, 1, -1)
+	// firstOfMonth := time.Date(currentYear, currentMonth, 1, 0, 0, 0, 0, currentLocation)
+	// lastOfMonth := firstOfMonth.AddDate(0, 1, -1)
 
-	subQueryBulanan := db.connection.Model(&entity.Transaksi{}).Select("id").Where("created_at >= ?", firstOfMonth).Where("created_at <= ?", lastOfMonth)
-	rows, err := db.connection.Model(&entity.DetailTransaksi{}).Select("toko_id, SUM(harga)").Having("transaksi_id = (?)", subQueryBulanan).Group("toko_id").Rows()
+	// subQueryBulanan := db.connection.Model(&entity.Transaksi{}).Select("id").Where("created_at >= ?", firstOfMonth).Where("created_at <= ?", lastOfMonth)
+	// rows, err := db.connection.Debug().Model(&entity.DetailTransaksi{}).Select("toko_id, SUM(harga)").Having("transaksi_id = (?)", subQueryBulanan).Group("toko_id").Rows()
+	rows, err := db.connection.Debug().Model(&entity.DetailTransaksi{}).Select("toko_id, SUM(harga)").Group("toko_id").Rows()
+
 	if err != nil {
 		return nil, err
 	}
